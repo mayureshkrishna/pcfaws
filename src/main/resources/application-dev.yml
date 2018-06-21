@@ -1,0 +1,34 @@
+---
+spring:
+  profiles: cloud
+  application:
+    name: ${vcap.application.name}
+cloud: 
+  aws:
+    access-key-id: ${vcap.services.pcfawss3.credentials.access-key-id}
+    access-key-secret: ${vcap.services.pcfawss3.credentials.secret_access_key}
+    region: 
+      static: ${vcap.services.pcfawss3.credentials.region}
+  s3:
+    default-bucket: ${vcap.services.pcfawss3.credentials.bucket}
+multipart.maxFileSize: 5MB
+multipart.maxRequestSize: 5MB
+management.cloudfoundry.skip-ssl-validation: 'true'
+management.endpoints.web.exposure.include: '*'
+---
+spring:
+  profiles: development
+  application:
+    name: pcfaws
+cloud: 
+  aws:
+    access-key-id: <replace with access id>
+    access-key-secret: <REPLACE WITH SECRET>
+    region: 
+      static: us-east-1
+  s3:
+    default-bucket: pcfawsmk
+multipart.maxFileSize: 5MB
+multipart.maxRequestSize: 5MB
+management.cloudfoundry.skip-ssl-validation: 'true'
+management.endpoints.web.exposure.include: '*'
