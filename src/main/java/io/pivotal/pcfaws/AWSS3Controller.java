@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.ListObjectsV2Request;
@@ -19,10 +21,17 @@ public class AWSS3Controller {
 	@Value("${cloud.aws.region.static}")
     private String region;
 	
+	@Value("${cloud.aws.access-key-id}")
+    private String access_key_id;
+	
+	@Value("${cloud.aws.access-key-secret}")
+    private String secret_key_id;
+	
 	@GetMapping("/s3")
     public ListObjectsV2Result getBucketResources() {
-
-		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withRegion(region).build();
+		
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(access_key_id, secret_key_id);				
+		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCreds)).withRegion(region).build();
 		System.out.println("Listing objects");
 		
 		ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withMaxKeys(2);
