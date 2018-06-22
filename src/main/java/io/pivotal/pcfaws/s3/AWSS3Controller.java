@@ -1,4 +1,4 @@
-package io.pivotal.pcfaws;
+package io.pivotal.pcfaws.s3;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,23 +15,27 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 @RestController
 public class AWSS3Controller {
 
-	@Value("${cloud.s3.default-bucket}")
+	@Value("${cloud.aws.s3.default-bucket}")
     private String bucket;
 	
 	@Value("${cloud.aws.region.static}")
     private String region;
 	
-	@Value("${cloud.aws.access-key-id}")
+	@Value("${cloud.aws.s3.access-key-id}")
     private String access_key_id;
 	
-	@Value("${cloud.aws.access-key-secret}")
+	@Value("${cloud.aws.s3.access-key-secret}")
     private String secret_key_id;
 	
-	@GetMapping("/s3")
+	@GetMapping("/s3/resources")
     public ListObjectsV2Result getBucketResources() {
 		
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(access_key_id, secret_key_id);				
-		AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(awsCreds)).withRegion(region).build();
+		AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+				.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+				.withRegion(region)
+				.build();
+		
 		System.out.println("Listing objects");
 		
 		ListObjectsV2Request req = new ListObjectsV2Request().withBucketName(bucket).withMaxKeys(2);

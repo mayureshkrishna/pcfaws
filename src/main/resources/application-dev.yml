@@ -1,3 +1,4 @@
+spring.profiles.active: development
 ---
 spring:
   profiles: cloud
@@ -5,16 +6,28 @@ spring:
     name: ${vcap.application.name}
 cloud: 
   aws:
-    access-key-id: ${vcap.services.pcfawss3.credentials.access-key-id}
-    access-key-secret: ${vcap.services.pcfawss3.credentials.secret_access_key}
-    region: 
+    s3:
+      access-key-id: ${vcap.services.pcfawss3.credentials.access-key-id}
+      access-key-secret: ${vcap.services.pcfawss3.credentials.secret_access_key}
+      default-bucket: ${vcap.services.pcfawss3.credentials.bucket}
+    region:
       static: ${vcap.services.pcfawss3.credentials.region}
-  s3:
-    default-bucket: ${vcap.services.pcfawss3.credentials.bucket}
-multipart.maxFileSize: 5MB
-multipart.maxRequestSize: 5MB
-management.cloudfoundry.skip-ssl-validation: 'true'
-management.endpoints.web.exposure.include: '*'
+    dynamodb:
+      access-key-id: ${vcap.services.pcfawsddb.credentials.access-key-id}
+      access-key-secret: ${vcap.services.pcfawsddb.credentials.secret_access_key}
+      region: 
+        static: ${vcap.services.pcfawsddb.credentials.region}
+  
+multipart: 
+  maxFileSize: 5MB
+  maxRequestSize: 5MB
+management: 
+  cloudfoundry: 
+    skip-ssl-validation: true 
+  endpoints: 
+    web:
+      exposure:
+        include: "*"
 ---
 spring:
   profiles: development
@@ -22,13 +35,24 @@ spring:
     name: pcfaws
 cloud: 
   aws:
-    access-key-id: <replace with access id>
-    access-key-secret: <REPLACE WITH SECRET>
+    s3:
+      access-key-id: REPLACE
+      access-key-secret: REPLACE
+      default-bucket: REPLACE
     region: 
-      static: us-east-1
-  s3:
-    default-bucket: pcfawsmk
-multipart.maxFileSize: 5MB
-multipart.maxRequestSize: 5MB
-management.cloudfoundry.skip-ssl-validation: 'true'
-management.endpoints.web.exposure.include: '*'
+      static: us-east-2
+    dynamodb:
+      access-key-id: REPLACE
+      access-key-secret: REPLACE
+      region: 
+        static: us-east-1
+multipart: 
+  maxFileSize: 5MB
+  maxRequestSize: 5MB
+management: 
+  cloudfoundry: 
+    skip-ssl-validation: true 
+  endpoints: 
+    web:
+      exposure:
+        include: "*"
